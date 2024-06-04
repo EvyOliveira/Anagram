@@ -11,13 +11,16 @@ func TestIsAnagram(t *testing.T) {
 	}{
 		{name: "it's an anagram", firstString: "anagram", secoundString: "nagaram", expected: true},
 		{name: "it's not an anagram", firstString: "rat", secoundString: "car", expected: false},
+		{name: "empty string", firstString: "", secoundString: "test", expected: false},
+		{name: "both empty strings", firstString: "", secoundString: "", expected: false},
+		{name: "different case", firstString: "Race", secoundString: "care", expected: true},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			current := IsAnagram(test.firstString, test.secoundString)
 			if current != test.expected {
-				t.Errorf("Expected %v, got %v", test.expected, current)
+				t.Errorf("Test case '%s': expected %v, got %v", test.name, test.expected, current)
 			}
 		})
 	}

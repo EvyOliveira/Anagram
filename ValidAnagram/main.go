@@ -1,8 +1,18 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
-func IsAnagram(firstString string, secoundString string) bool {
+func IsAnagram(firstString, secoundString string) bool {
+	if firstString == "" || secoundString == "" {
+		return false
+	}
+
+	firstString = strings.ToLower(firstString)
+	secoundString = strings.ToLower(secoundString)
+
 	charactersMap := make(map[rune]int)
 	for _, character := range firstString {
 		charactersMap[character]++
@@ -32,6 +42,15 @@ func main() {
 	thirdWord := "rat"
 	fourthWord := "car"
 	thirdAndFourthComparison := IsAnagram(thirdWord, fourthWord)
-	fmt.Printf("Third word is %s and fourth word is %s. They are anagrams? %v\n", thirdWord, fourthWord, thirdAndFourthComparison)
+	fmt.Printf("Third word is %s and fourth word is %s. They are anagrams? %v\n", firstWord, secoundWord, thirdAndFourthComparison)
 
+	emptyString := ""
+	fifthWord := "test"
+	emptyStringAndFifthWordComparison := IsAnagram(emptyString, fifthWord)
+	fmt.Printf("Empty string is %s and fifth word is %s. They are anagrams? %v\n", emptyString, fifthWord, emptyStringAndFifthWordComparison)
+
+	sixthWord := "iRaceMa"
+	seventhWord := "aMerIca"
+	sixthWordAndseventhWordComparison := IsAnagram(sixthWord, seventhWord)
+	fmt.Printf("Sixth word is %s and seventh word is %s. They are anagrams? %v\n", sixthWord, seventhWord, sixthWordAndseventhWordComparison)
 }
