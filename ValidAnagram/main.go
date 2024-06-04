@@ -26,7 +26,6 @@ func isAnagram(firstString string, secoundString string) bool {
 func main() {
 	firstWord := "anagram"
 	secoundWord := "nagaram"
-
 	firstAndSecoundComparison := isAnagram(firstWord, secoundWord)
 	fmt.Printf("First word is %s and secound word is %s. They are anagrams? %v\n", firstWord, secoundWord, firstAndSecoundComparison)
 
