@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func isAnagram(firstString string, secoundString string) bool {
+func IsAnagram(firstString string, secoundString string) bool {
 	charactersMap := make(map[rune]int)
 	for _, character := range firstString {
 		charactersMap[character]++
@@ -26,12 +26,12 @@ func isAnagram(firstString string, secoundString string) bool {
 func main() {
 	firstWord := "anagram"
 	secoundWord := "nagaram"
-	firstAndSecoundComparison := isAnagram(firstWord, secoundWord)
+	firstAndSecoundComparison := IsAnagram(firstWord, secoundWord)
 	fmt.Printf("First word is %s and secound word is %s. They are anagrams? %v\n", firstWord, secoundWord, firstAndSecoundComparison)
 
 	thirdWord := "rat"
 	fourthWord := "car"
-	thirdAndFourthComparison := isAnagram(thirdWord, fourthWord)
+	thirdAndFourthComparison := IsAnagram(thirdWord, fourthWord)
 	fmt.Printf("Third word is %s and fourth word is %s. They are anagrams? %v\n", thirdWord, fourthWord, thirdAndFourthComparison)
 
 }

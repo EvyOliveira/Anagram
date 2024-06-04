@@ -2,7 +2,9 @@ package main
 
 import "testing"
 
-func TestIsAnagram(t *testing.T) {
+func TestAnagramChecker_IsAnagram(t *testing.T) {
+	checker := &AnagramChecker{}
+
 	tests := []struct {
 		name          string
 		firstString   string
@@ -15,7 +17,7 @@ func TestIsAnagram(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			current := IsAnagram(test.firstString, test.secoundString)
+			current := checker.IsAnagram(test.firstString, test.secoundString)
 			if current != test.expected {
 				t.Errorf("Expected %v, got %v", test.expected, current)
 			}
