@@ -29,18 +29,11 @@ func (h *MajorityElement) FindMajorityElement(nums []int64) (int64, error) {
 	return candidate, nil
 }
 
-func findMajorityElement(checker MajorityChecker, nums []int64) (int64, error) {
+func isAnEmptySlice(checker MajorityChecker, nums []int64) (int64, error) {
 	if len(nums) == 0 {
 		return 0, errors.New("slice is empty")
 	}
 	return checker.FindMajorityElement(nums)
-}
-
-func isAnEmptySlice(nums []int64) (int64, error) {
-	if len(nums) == 0 {
-		return 0, errors.New("slice is empty")
-	}
-	return 1, nil
 }
 
 func main() {
@@ -48,24 +41,24 @@ func main() {
 	nums2 := []int64{1000, 2, 300, 300, 300, 40, 1000, 1000}
 
 	checker := &MajorityElement{}
-	_, firstSliceError := isAnEmptySlice(nums1)
+	_, firstSliceError := isAnEmptySlice(checker, nums1)
 	if firstSliceError != nil {
 		fmt.Println("error checking nums1:", firstSliceError)
 	}
 
-	_, secoundSliceError := isAnEmptySlice(nums2)
+	_, secoundSliceError := isAnEmptySlice(checker, nums2)
 	if secoundSliceError != nil {
 		fmt.Println("error checking nums2:", secoundSliceError)
 	}
 
-	majorityElement1, err := findMajorityElement(checker, nums1)
+	majorityElement1, err := checker.FindMajorityElement(nums1)
 	if err != nil {
 		fmt.Println("error finding majority element in nums1:", err)
 	} else {
 		fmt.Println("majority element in nums1:", majorityElement1)
 	}
 
-	majorityElement2, err := findMajorityElement(checker, nums2)
+	majorityElement2, err := checker.FindMajorityElement(nums2)
 	if err != nil {
 		fmt.Println("error finding majority element in nums2:", err)
 	} else {
