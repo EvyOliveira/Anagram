@@ -18,7 +18,7 @@ func TestFindMajorityElement(t *testing.T) {
 		{name: "empty slice", input: []int64{}, candidate: 1, expectedMajority: false},
 	}
 
-	checker := &SimpleMajorityChecker{}
+	//checker := &SimpleMajorityChecker{}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

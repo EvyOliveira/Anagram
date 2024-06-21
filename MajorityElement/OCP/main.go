@@ -3,89 +3,79 @@ package main
 import (
 	"errors"
 	"fmt"
+	"sort"
 )
 
 type MajorityChecker interface {
-	CheckMajority(arr []int64, candidate int64) bool
+	FindMajorityElement(num []int64) (int64, error)
 }
 
-func findMajorityElement(nums []int64) int64 {
-	candidate := nums[0]
-	count := 1
+type HashTableMajorityElement struct{}
 
-	for i := 1; i < len(nums); i++ {
-		if nums[i] == candidate {
-			count++
-		} else {
-			count--
-			if count == 0 {
-				candidate = nums[i]
-				count = 1
-			}
-		}
-	}
-	return candidate
-}
-
-type SimpleMajorityChecker struct{}
-
-func (s *SimpleMajorityChecker) CheckMajority(arr []int64, candidate int64) bool {
-	count := int64(0)
-
-	for _, num := range arr {
-		if num == candidate {
-			count++
-			if count > int64(len(arr)/2) {
-				return true
-			}
-		}
-	}
-	return count > s.countElement(arr, candidate)/2
-}
-
-func (s *SimpleMajorityChecker) countElement(arr []int64, element int64) int64 {
-	count := int64(0)
-
-	for _, num := range arr {
-		if num == element {
-			count++
-		}
-	}
-	return count
-}
-
-func isAnEmptySlice(nums []int64) (int64, error) {
+func (h *HashTableMajorityElement) FindMajorityElement(nums []int64) (int64, error) {
 	if len(nums) == 0 {
 		return 0, errors.New("slice is empty")
 	}
-	return 1, nil
+
+	elements := make(map[int64]int64)
+	for _, num := range nums {
+		elements[num]++
+		if elements[num] > int64(len(nums)/2) {
+			return num, nil
+		}
+	}
+	return -1, errors.New("majority element not found")
+}
+
+type SortingMajorityElement struct{}
+
+func (s *SortingMajorityElement) FindMajorityElement(nums []int64) (int64, error) {
+	if len(nums) == 0 {
+		return 0, errors.New("slice is empty")
+	}
+
+	sortedNums := make([]int64, len(nums))
+	copy(sortedNums, nums)
+	sort.Slice(sortedNums, func(i, j int) bool {
+		return sortedNums[i] < sortedNums[j]
+	})
+
+	mid := int64(len(sortedNums) / 2)
+	count := 1
+
+	for i := mid + 1; i < int64(len(sortedNums)); i++ {
+		if sortedNums[i] == sortedNums[mid] {
+			count++
+		}
+	}
+	if count > len(nums)/2 {
+		return sortedNums[mid], nil
+	}
+
+	return sortedNums[mid], nil
+}
+
+func isAnEmptySlice(finder MajorityChecker, nums []int64) (int64, error) {
+	return finder.FindMajorityElement(nums)
 }
 
 func main() {
-	checker := &SimpleMajorityChecker{}
+	nums1 := []int64{2, 40, 300, 40, 1000, 300}
+	nums2 := []int64{1000, 2, 300, 40, 1000, 1000}
 
-	nums1 := []int64{1000, 2, 300, 40, 300, 300, 1000}
-	nums2 := []int64{1000, 2, 300, 300, 40, 1000}
+	finder := &SortingMajorityElement{}
 
-	_, firstSliceError := isAnEmptySlice(nums1)
-	if firstSliceError != nil {
-		fmt.Println("error checking nums1:", firstSliceError)
-	}
-
-	_, secoundSliceError := isAnEmptySlice(nums2)
-	if secoundSliceError != nil {
-		fmt.Println("error checking nums2:", secoundSliceError)
-	}
-
-	if checker.CheckMajority(nums1, nums1[0]) {
-		fmt.Println("majority element in nums1:", nums1[0])
+	result1, err := isAnEmptySlice(finder, nums1)
+	if err != nil {
+		fmt.Println("error for nums1:", err)
 	} else {
-		fmt.Println("no majority element in nums1")
+		fmt.Println("majority element in:", nums1, ":", result1)
 	}
 
-	if checker.CheckMajority(nums2, nums2[0]) {
-		fmt.Println("majority element in nums2:", nums2[0])
+	result2, err := isAnEmptySlice(finder, nums2)
+	if err != nil {
+		fmt.Println("error for nums2:", err)
 	} else {
-		fmt.Println("no majority element in nums2")
+		fmt.Println("majority element in:", nums2, ":", result2)
 	}
 }
