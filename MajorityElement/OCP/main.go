@@ -1,12 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type MajorityChecker interface {
-	CheckMajority(arr []int, candidate int) bool
+	CheckMajority(arr []int64, candidate int64) bool
 }
 
-func findMajorityElement(nums []int, checker MajorityChecker) (int, bool) {
+func findMajorityElement(nums []int64) int64 {
 	candidate := nums[0]
 	count := 1
 
@@ -21,22 +24,18 @@ func findMajorityElement(nums []int, checker MajorityChecker) (int, bool) {
 			}
 		}
 	}
-
-	if checker.CheckMajority(nums, candidate) {
-		return candidate, true
-	}
-	return 0, false
+	return candidate
 }
 
 type SimpleMajorityChecker struct{}
 
-func (s *SimpleMajorityChecker) CheckMajority(arr []int, candidate int) bool {
-	count := 0
+func (s *SimpleMajorityChecker) CheckMajority(arr []int64, candidate int64) bool {
+	count := int64(0)
 
 	for _, num := range arr {
 		if num == candidate {
 			count++
-			if count > len(arr)/2 {
+			if count > int64(len(arr)/2) {
 				return true
 			}
 		}
@@ -44,8 +43,8 @@ func (s *SimpleMajorityChecker) CheckMajority(arr []int, candidate int) bool {
 	return count > s.countElement(arr, candidate)/2
 }
 
-func (s *SimpleMajorityChecker) countElement(arr []int, element int) int {
-	count := 0
+func (s *SimpleMajorityChecker) countElement(arr []int64, element int64) int64 {
+	count := int64(0)
 
 	for _, num := range arr {
 		if num == element {
@@ -55,23 +54,37 @@ func (s *SimpleMajorityChecker) countElement(arr []int, element int) int {
 	return count
 }
 
+func isAnEmptySlice(nums []int64) (int64, error) {
+	if len(nums) == 0 {
+		return 0, errors.New("slice is empty")
+	}
+	return 1, nil
+}
+
 func main() {
 	checker := &SimpleMajorityChecker{}
 
-	nums1 := []int{1000, 2, 300, 40, 300, 300, 1000}
-	nums2 := []int{2, 1000, 1, 500, 2, 20, 1000}
+	nums1 := []int64{1000, 2, 300, 40, 300, 300, 1000}
+	nums2 := []int64{1000, 2, 300, 300, 40, 1000}
 
-	majorityElement1, isMajority1 := findMajorityElement(nums1, checker)
-	majorityElement2, isMajority2 := findMajorityElement(nums2, checker)
+	_, firstSliceError := isAnEmptySlice(nums1)
+	if firstSliceError != nil {
+		fmt.Println("error checking nums1:", firstSliceError)
+	}
 
-	if isMajority1 {
-		fmt.Println("majority element in nums1:", majorityElement1)
+	_, secoundSliceError := isAnEmptySlice(nums2)
+	if secoundSliceError != nil {
+		fmt.Println("error checking nums2:", secoundSliceError)
+	}
+
+	if checker.CheckMajority(nums1, nums1[0]) {
+		fmt.Println("majority element in nums1:", nums1[0])
 	} else {
 		fmt.Println("no majority element in nums1")
 	}
 
-	if isMajority2 {
-		fmt.Println("majority element in nums2:", majorityElement2)
+	if checker.CheckMajority(nums2, nums2[0]) {
+		fmt.Println("majority element in nums2:", nums2[0])
 	} else {
 		fmt.Println("no majority element in nums2")
 	}
