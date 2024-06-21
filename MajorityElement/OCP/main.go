@@ -37,7 +37,7 @@ func isAnEmptySlice(checker MajorityChecker, nums []int64) (int64, error) {
 }
 
 func main() {
-	nums1 := []int64{2, 40, 300, 40, 1000, 300}
+	nums1 := []int64{}
 	nums2 := []int64{1000, 2, 300, 300, 300, 40, 1000, 1000}
 
 	checker := &MajorityElement{}
