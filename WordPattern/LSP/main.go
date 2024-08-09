@@ -2,13 +2,11 @@ package main
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
-	"unicode"
 )
 
 type WordProcessor interface {
-	Split(s string) []string
+	Split(s, delimiter string) []string
 }
 
 type DefaultWordProcessor struct{}
@@ -25,35 +23,16 @@ func (c *CustomDelimiterWordProcessor) Split(s string) []string {
 	return strings.Split(s, c.delimiter)
 }
 
-type RegexWordProcessor struct {
-	regex *regexp.Regexp
+type DefaultWordProcessorAdapter struct {
+	defaultWordProcessor *DefaultWordProcessor
 }
 
-func (r *RegexWordProcessor) Split(s string) []string {
-	return r.regex.FindAllString(s, -1)
-}
-
-type AdvancedWordProcessor struct{}
-
-func (a *AdvancedWordProcessor) Split(s string) []string {
-	var words []string
-	var word []rune
-	for _, r := range s {
-		if unicode.IsLetter(r) || unicode.IsNumber(r) {
-			word = append(word, r)
-		} else if len(word) > 0 {
-			words = append(words, string(word))
-			word = nil
-		}
-	}
-	if len(word) > 0 {
-		words = append(words, string(word))
-	}
-	return words
+func (a *DefaultWordProcessorAdapter) Split(s, delimiter string) []string {
+	return a.defaultWordProcessor.Split(s)
 }
 
 func WordPattern(pattern, s string, wordProcessor WordProcessor) bool {
-	words := wordProcessor.Split(s)
+	words := wordProcessor.Split(s, "")
 	if len(words) != len(pattern) {
 		return false
 	}
@@ -83,8 +62,9 @@ func main() {
 	s := "dog cat cat dog"
 	pattern := "aaaa"
 	defaultProcessor := &DefaultWordProcessor{}
+	adapter := &DefaultWordProcessorAdapter{defaultWordProcessor: defaultProcessor}
 
-	if WordPattern(pattern, s, defaultProcessor) {
+	if WordPattern(pattern, s, adapter) {
 		fmt.Println("the string " + s + " follows the pattern " + pattern + ".")
 	} else {
 		fmt.Println("the string " + s + " does not follow the pattern " + pattern + ".")
